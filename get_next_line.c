@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mfakih <mfakih@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/22 18:18:19 by mfakih            #+#    #+#             */
+/*   Updated: 2025/11/22 18:23:19 by mfakih           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
 static int	init_file(char **file)
@@ -23,7 +35,7 @@ static int	join_and_replace(char **file, char *buffer)
 	return (1);
 }
 
-ssize_t	attach_buffer(char **file, int fd)
+static ssize_t	attach_buffer(char **file, int fd)
 {
 	char	*buffer;
 	ssize_t	bytes;
@@ -49,7 +61,7 @@ ssize_t	attach_buffer(char **file, int fd)
 	return (bytes);
 }
 
-char	*extract_line(char *file, int *i, int j)
+static char	*extract_line(char *file, int *i, int j)
 {
 	char	*r;
 	int		k;
@@ -90,19 +102,17 @@ char	*get_next_line(int fd)
 	return (extract_line(file, &i, j));
 }
 
-#include <fcntl.h>
-#include <stdio.h>
-
-int main(int argc, char **argv)
-{
-	argc = 12;
-
-	int fd = open(argv[1], O_RDONLY);
-	char *s = get_next_line(fd);
-	char *line2 = get_next_line(fd);
-	char *line3 = get_next_line(fd);
-	printf("%s%s%s", s, line2, line3);
-	free (s);
-	free (line3);
-	free (line2);
-}
+// #include <fcntl.h>
+// #include <stdio.h>
+// int main(int argc, char **argv)
+// {
+// 	argc = 12;
+// 	int fd = open(argv[1], O_RDONLY);
+// 	char *s = get_next_line(fd);
+// 	char *line2 = get_next_line(fd);
+// 	char *line3 = get_next_line(fd);
+// 	printf("%s%s%s", s, line2, line3);
+// 	free (s);
+// 	free (line3);
+// 	free (line2);
+// }
