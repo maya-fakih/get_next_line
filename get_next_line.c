@@ -6,7 +6,7 @@
 /*   By: mfakih <mfakih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 18:18:19 by mfakih            #+#    #+#             */
-/*   Updated: 2025/11/22 18:23:19 by mfakih           ###   ########.fr       */
+/*   Updated: 2025/11/29 13:22:46 by mfakih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,10 @@ char	*get_next_line(int fd)
 
 	ret = attach_buffer(&file, fd);
 	if (ret <= 0 && (!file || file[i] == '\0'))
+	{
+		free(file);
 		return (NULL);
+	}
 	j = 0;
 	while (file[i + j] != '\n')
 	{
@@ -102,17 +105,17 @@ char	*get_next_line(int fd)
 	return (extract_line(file, &i, j));
 }
 
-// #include <fcntl.h>
-// #include <stdio.h>
-// int main(int argc, char **argv)
-// {
-// 	argc = 12;
-// 	int fd = open(argv[1], O_RDONLY);
-// 	char *s = get_next_line(fd);
-// 	char *line2 = get_next_line(fd);
-// 	char *line3 = get_next_line(fd);
-// 	printf("%s%s%s", s, line2, line3);
-// 	free (s);
-// 	free (line3);
-// 	free (line2);
-// }
+#include <fcntl.h>
+#include <stdio.h>
+int main()
+{
+	int fd = open("numbers.dict", O_RDONLY);
+	char *line;
+	line = get_next_line(fd);
+	while (line)
+	{
+		printf("%s", line);
+		free (line);
+		line = get_next_line(fd);
+	}
+}
