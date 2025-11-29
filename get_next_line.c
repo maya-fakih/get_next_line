@@ -6,116 +6,138 @@
 /*   By: mfakih <mfakih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 18:18:19 by mfakih            #+#    #+#             */
-/*   Updated: 2025/11/29 13:22:46 by mfakih           ###   ########.fr       */
+/*   Updated: 2025/11/29 18:46:43 by mfakih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static int	init_file(char **file)
+char	*init_string(char *s)
 {
-	if (*file != NULL)
-		return (1);
-	*file = malloc(1);
-	if (!*file)
-		return (0);
-	(*file)[0] = '\0';
-	return (1);
+	if (!s)
+	{
+		s = malloc(1);
+		if (!s)
+			return (NULL);
+		s[0] = '\0';
+	}
+	return (s);
 }
 
-static int	join_and_replace(char **file, char *buffer)
-{
-	char	*tmp;
-
-	tmp = *file;
-	*file = ft_strjoin(tmp, buffer);
-	free(tmp);
-	if (!*file)
-		return (0);
-	return (1);
-}
-
-static ssize_t	attach_buffer(char **file, int fd)
+char	*read_and_stash(int fd, char *stash)
 {
 	char	*buffer;
-	ssize_t	bytes;
+	int		bytes;
+	int		i;
 
-	if (!init_file(file))
-		return (-1);
+	i = -1;
+	stash = init_string(stash);
+	if (!stash)
+		return (NULL);
 	buffer = malloc(BUFFER_SIZE + 1);
 	if (!buffer)
-		return (-1);
-	bytes = read(fd, buffer, BUFFER_SIZE);
-	if (bytes <= 0)
+		return (free(stash), NULL);
+	while (stash[++i] != '\n')
 	{
-		free(buffer);
-		return (bytes);
+		if (stash[i] == '\0')
+		{	
+			bytes = read(fd, buffer, BUFFER_SIZE);
+			if (bytes == 0)
+				return (free(buffer), stash);
+			if (bytes < 0)
+				return (free(buffer), free(stash), NULL);
+			buffer[bytes] = '\0';
+			stash = ft_strjoin(stash, buffer);
+		}
 	}
-	buffer[bytes] = '\0';
-	if (!join_and_replace(file, buffer))
-	{
-		free(buffer);
-		return (-1);
-	}
-	free(buffer);
-	return (bytes);
+	return (free(buffer), stash);
 }
 
-static char	*extract_line(char *file, int *i, int j)
+char	*extract_line(char *stash)
 {
-	char	*r;
-	int		k;
+	char	*line;
+	int		i;
+	int		j;
 
-	r = malloc(j + (file[*i + j] == '\n') + 1);
-	if (!r)
+	i = 0;
+	j = -1;
+	if (!stash || stash[0] == '\0')
 		return (NULL);
-	k = 0;
-	while (file[*i] && file[*i] != '\n')
-		r[k++] = file[(*i)++];
-	if (file[*i] == '\n')
-		r[k++] = file[(*i)++];
-	r[k] = '\0';
-	return (r);
+	while (stash[i] != '\n' && stash[i])
+		i++;
+	line = malloc (i + (stash[i] == '\n') + 1);
+	if (!line)
+		return (NULL);
+	while (++j < i)
+		line[j] = stash[j];
+	if (stash[i] == '\n')
+		line[j++] = '\n';
+	line[j] = '\0';
+	return (line);
+}
+
+char	*clean_stash(char *stash)
+{
+	int		i;
+	int		j;
+	int		stash_len;
+	char	*new_stash;
+
+	i = 0;
+	j = 0;
+	if (!stash)
+		return (NULL);
+	stash_len = ft_strlen(stash);
+	while (stash[i] && stash[i] != '\n')
+		i++;
+	if (!stash[i])
+		return (free(stash), NULL);
+	i++;
+	new_stash = malloc(stash_len - i + 1);
+	if (!new_stash)
+		return (stash);
+	while (stash[i])
+		new_stash[j++] = stash[i++];
+	new_stash[j] = '\0';
+	return (free(stash), new_stash);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*file;
-	static int	i;
-	ssize_t		ret;
-	int			j;
+	static char	*stash;
+	char		*line;
 
-	ret = attach_buffer(&file, fd);
-	if (ret <= 0 && (!file || file[i] == '\0'))
-	{
-		free(file);
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	stash = read_and_stash(fd, stash);
+	if (!stash)
+		return (NULL);
+	line = extract_line(stash);
+	if (!line)
+	{	
+		free (stash);
+		stash = NULL;
 		return (NULL);
 	}
-	j = 0;
-	while (file[i + j] != '\n')
+	stash = clean_stash(stash);
+	if (stash && stash[0] == '\0')
 	{
-		if (file[i + j] == '\0')
-		{
-			ret = attach_buffer(&file, fd);
-			if (ret <= 0)
-				break ;
-		}
-		j++;
+		free(stash);
+		stash = NULL;
 	}
-	return (extract_line(file, &i, j));
+	return (line);
 }
-
 #include <fcntl.h>
 #include <stdio.h>
 int main()
 {
-	int fd = open("numbers.dict", O_RDONLY);
-	char *line;
-	line = get_next_line(fd);
-	while (line)
+	int fd = open("test.txt", O_RDONLY);
+	char *s = get_next_line(fd);
+	while (s)
 	{
-		printf("%s", line);
-		free (line);
-		line = get_next_line(fd);
+		printf("%s", s);
+		free (s);
+		s = get_next_line(fd);
 	}
+	free (s);
 }

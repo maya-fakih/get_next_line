@@ -6,7 +6,7 @@
 /*   By: mfakih <mfakih@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 18:18:29 by mfakih            #+#    #+#             */
-/*   Updated: 2025/11/22 18:20:33 by mfakih           ###   ########.fr       */
+/*   Updated: 2025/11/29 18:42:55 by mfakih           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,11 @@
 #  define BUFFER_SIZE 100
 # endif
 
-char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_strjoin(char *s1, char *s2);
 size_t	ft_strlen(const char *str);
-char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*get_next_line(int fd);
-
+char	*extract_line(char *stash);
+char	*read_and_stash(int fd, char *stash);
+char	*init_string(char *s);
+char	*clean_stash(char *stash);
 #endif
