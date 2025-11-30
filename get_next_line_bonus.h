@@ -22,7 +22,7 @@
 
 char	*ft_strjoin_bonus(char *s1, char *s2);
 size_t	ft_strlen_bonus(const char *str);
-char	*get_next_line_bonus(int fd);
+char	*get_next_line(int fd);
 char	*extract_line_bonus(char *stash);
 char	*read_and_stash_bonus(int fd, char *stash);
 char	*init_string_bonus(char *s);

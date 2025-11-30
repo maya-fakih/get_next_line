@@ -90,7 +90,7 @@ char	*clean_stash_bonus(char *stash)
 	return (free(stash), new_stash);
 }
 
-char	*get_next_line_bonus(int fd)
+char	*get_next_line(int fd)
 {
 	static char	*stash[1024];
 	char		*line;

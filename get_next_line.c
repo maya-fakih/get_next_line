@@ -127,17 +127,17 @@ char	*get_next_line(int fd)
 	}
 	return (line);
 }
-#include <fcntl.h>
-#include <stdio.h>
-int main()
-{
-	int fd = open("test.txt", O_RDONLY);
-	char *s = get_next_line(fd);
-	while (s)
-	{
-		printf("%s", s);
-		free (s);
-		s = get_next_line(fd);
-	}
-	free (s);
-}
+// #include <fcntl.h>
+// #include <stdio.h>
+// int main()
+// {
+// 	int fd = open("test.txt", O_RDONLY);
+// 	char *s = get_next_line(fd);
+// 	while (s)
+// 	{
+// 		printf("%s", s);
+// 		free (s);
+// 		s = get_next_line(fd);
+// 	}
+// 	free (s);
+// }
