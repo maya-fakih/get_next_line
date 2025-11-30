@@ -40,7 +40,7 @@ char	*read_and_stash(int fd, char *stash)
 	while (stash[++i] != '\n')
 	{
 		if (stash[i] == '\0')
-		{	
+		{
 			bytes = read(fd, buffer, BUFFER_SIZE);
 			if (bytes == 0)
 				return (free(buffer), stash);
@@ -114,7 +114,7 @@ char	*get_next_line(int fd)
 		return (NULL);
 	line = extract_line(stash);
 	if (!line)
-	{	
+	{
 		free (stash);
 		stash = NULL;
 		return (NULL);

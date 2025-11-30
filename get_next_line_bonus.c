@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mfakih <mfakih@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/30 15:06:42 by mfakih            #+#    #+#             */
+/*   Updated: 2025/11/30 15:06:43 by mfakih           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line_bonus.h"
 
 char	*init_string_bonus(char *s)
@@ -28,7 +40,7 @@ char	*read_and_stash_bonus(int fd, char *stash)
 	while (stash[++i] != '\n')
 	{
 		if (stash[i] == '\0')
-		{	
+		{
 			bytes = read(fd, buffer, BUFFER_SIZE);
 			if (bytes == 0)
 				return (free(buffer), stash);
@@ -102,7 +114,7 @@ char	*get_next_line(int fd)
 		return (NULL);
 	line = extract_line_bonus(stash[fd]);
 	if (!line)
-	{	
+	{
 		free (stash[fd]);
 		stash[fd] = NULL;
 		return (NULL);
