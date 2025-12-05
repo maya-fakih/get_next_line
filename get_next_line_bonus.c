@@ -134,15 +134,15 @@ char	*get_next_line(int fd)
 // {
 // 	int fd = open("test.txt", O_RDONLY);
 // 	int fd2 = open ("test2.txt", O_RDONLY);
-// 	char *s = get_next_line_bonus(fd);
-// 	char *s2 = get_next_line_bonus(fd2);
+// 	char *s = get_next_line(fd);
+// 	char *s2 = get_next_line(fd2);
 // 	while (s)
 // 	{
 // 		printf("%s%s", s, s2);
 // 		free (s);
 // 		free (s2);
-// 		s2 = get_next_line_bonus(fd2);
-// 		s = get_next_line_bonus(fd);
+// 		s2 = get_next_line(fd2);
+// 		s = get_next_line(fd);
 // 	}
 // 	free (s);
 // }
